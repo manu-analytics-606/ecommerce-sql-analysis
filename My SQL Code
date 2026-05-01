@@ -1,0 +1,35 @@
+-- Total Revenue
+SELECT SUM(quantity * price) AS total_revenue
+FROM order_items;
+
+-- Revenue per customer
+SELECT c.customer_name,
+       SUM(oi.quantity * oi.price) AS revenue
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_items oi ON o.order_id = oi.order_id
+GROUP BY c.customer_name;
+
+-- Top Customer
+SELECT c.customer_name,
+       SUM(oi.quantity * oi.price) AS revenue
+FROM customers c
+JOIN orders o ON c.customer_id = o.customer_id
+JOIN order_items oi ON o.order_id = oi.order_id
+GROUP BY c.customer_name
+ORDER BY revenue DESC
+LIMIT 1;
+
+-- Monthly Sales
+SELECT DATE_FORMAT(order_date, '%Y-%m') AS month,
+       SUM(quantity * price) AS revenue
+FROM orders o
+JOIN order_items oi ON o.order_id = oi.order_id
+GROUP BY month;
+
+-- Best Selling Product
+SELECT product_name,
+       SUM(quantity) AS total_sold
+FROM order_items
+GROUP BY product_name
+ORDER BY total_sold DESC;
